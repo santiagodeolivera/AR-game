@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-	<body style="margin: 0px; overflow: hidden;">
+    <body style="margin: 0px; overflow: hidden;">
         <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
         <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
         <a-scene id="main-scene" embedded arjs="detectionMode: color_and_matrix; matrixCodeType: 3x3_HAMMING63;">
@@ -8,7 +8,7 @@
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/1.glb"
+				gltf-model="../models/4.glb"
 				></a-entity>
 
 				<!-- From https://onlinesound.net/8bit-sfx-generator -->
@@ -19,79 +19,55 @@
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/2.glb"
+				gltf-model="../models/5.glb"
 				></a-entity>
 			</a-marker>
 			<a-marker type="barcode" value="2">
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/3.glb"
+				gltf-model="../models/6.glb"
+				></a-entity>
+			</a-marker>
+			<a-marker type="barcode" value="Hiro">
+				<a-entity
+				position="0 0 0"
+				scale="0.05 0.05 0.05"
+				gltf-model="../models/7.glb"
 				></a-entity>
 			</a-marker>
 			<a-entity camera></a-entity>
-		</a-scene>
-	
-		<div id="congrats" style="position:fixed;left:50%;top:18%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:18px 26px;border-radius:10px;font-size:1.15rem;display:none;z-index:9999;box-shadow:0 6px 18px rgba(0,0,0,0.35);">
-			<strong>¡Felicidades!</strong>
-			<div id="congrats-text">Encontraste las 3 imágenes.</div>
-			<button id="congrats-close" style="margin-top:8px;padding:6px 10px;border-radius:6px;border:none;background:#2ecc71;color:#042;cursor:pointer;">Cerrar</button>
-		</div>
-
+        </a-scene>
 		<script>
+			let marcadores = [false, false, false];
+			let viewedMarkers = false;
 			(() => {
-				function attachSoundsToMarker(marker) {
+				function attachSoundsToMarker(marker, index) {
 					const sounds = marker.querySelectorAll(":scope > a-entity.sound-on-marker-found");
-
 					marker.addEventListener("markerFound", () => {
+						marcadores[index] = true;
 						console.log("Marker found:", marker);
 						for (const sound of sounds) {
 							sound.components.sound.playSound();
 						}
+						Congrats();
 					});
 				}
 
-				const markers = Array.from(document.querySelectorAll("#main-scene > a-marker"));
-
-				if (!markers.length) return;
-
-				const idOf = (m) => {
-					if (m.hasAttribute('value')) return 'value-' + m.getAttribute('value');
-					if (m.hasAttribute('id')) return m.getAttribute('id');
-					if (m.hasAttribute('preset')) return 'preset-' + m.getAttribute('preset');
-					return m.outerHTML.slice(0,40); // fallback corto
-				};
-
-
-				const required = new Set(markers.map(idOf));
-				const seen = new Set();
-
-				const congrats = document.getElementById('congrats');
-				const congratsText = document.getElementById('congrats-text');
-				const congratsClose = document.getElementById('congrats-close');
-
-				congratsClose.addEventListener('click', () => {
-					congrats.style.display = 'none';
-				});
-
-				function showCongrats(message) {
-					if (message) congratsText.textContent = message;
-					congrats.style.display = 'block';
-				}
+				const markers = document.querySelectorAll("#main-scene > a-marker");
 
 				for (const marker of markers) {
-					attachSoundsToMarker(marker);
-
-					const key = idOf(marker);
-
-					marker.addEventListener('markerFound', () => {
-						seen.add(key);
-						console.log('Vistos:', Array.from(seen));
-						if (seen.size >= required.size) {
-							showCongrats('¡Felicidades! Encontraste las ' + required.size + ' imágenes.');
-						}
-					});
+					attachSoundsToMarker(marker, parseInt(marker.getAttribute("value")));
 				}
+
+				Congrats = () => {
+					if (viewedMarkers) return;
+					for (const visto of marcadores) {
+						if (!visto) return;
+					}
+					viewedMarkers = true;
+					return setTimeout(() => alert("felicitaciones has ganado nuestro juego"), 1000);
+				};
 			})();
 		</script>
     </body>
