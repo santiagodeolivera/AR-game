@@ -73,7 +73,7 @@
 			<p>Escanea el primer marcador y empieza tu búsqueda.</p>
 			<p>¿Listo para esta Búsqueda? ¡Seguí las pistas y recuperá lo que es tuyo!</p>
 
-            <button id="start-button" class="button">Comenzar búsqueda</button>
+            <button id="startButton" class="button">Comenzar búsqueda</button>
         </div>
     </div> 
     <div id="congratsScreen" class="screen hidden" aria-hidden="true">
@@ -127,8 +127,8 @@
             let viewedMarkers = false;
 
             function setupStoryScreenAndMarkers() {
-                const storyScreen = document.getElementById('story-screen');
-                const startButton = document.getElementById('start-button');
+                const storyScreen = document.getElementById('storyScreen');
+                const startButton = document.getElementById('startButton');
 
                 if (startButton && storyScreen) {
                     startButton.addEventListener('click', () => {
@@ -136,7 +136,7 @@
                         console.log('Pantalla de historia oculta');
                     });
                 } else {
-                    console.warn('start-button o story-screen no encontrados en test/index.html');
+                    console.warn('startButton o storyScreen no encontrados en test/index.html');
                 }
 
                 function attachSoundsToMarker(marker, index) {
