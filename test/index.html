@@ -8,7 +8,7 @@
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/1.glb"
+				gltf-model="../models/4.glb"
 				></a-entity>
 
 				<!-- From https://onlinesound.net/8bit-sfx-generator -->
@@ -19,36 +19,55 @@
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/2.glb"
+				gltf-model="../models/5.glb"
 				></a-entity>
 			</a-marker>
 			<a-marker type="barcode" value="2">
 				<a-entity
 				position="0 0 0"
 				scale="0.05 0.05 0.05"
-				gltf-model="../models/3.glb"
+				gltf-model="../models/6.glb"
+				></a-entity>
+			</a-marker>
+			<a-marker type="barcode" value="Hiro">
+				<a-entity
+				position="0 0 0"
+				scale="0.05 0.05 0.05"
+				gltf-model="../models/7.glb"
 				></a-entity>
 			</a-marker>
 			<a-entity camera></a-entity>
         </a-scene>
 		<script>
+			let marcadores = [false, false, false];
+			let viewedMarkers = false;
 			(() => {
-				function attachSoundsToMarker(marker) {
+				function attachSoundsToMarker(marker, index) {
 					const sounds = marker.querySelectorAll(":scope > a-entity.sound-on-marker-found");
-
 					marker.addEventListener("markerFound", () => {
+						marcadores[index] = true;
 						console.log("Marker found:", marker);
 						for (const sound of sounds) {
 							sound.components.sound.playSound();
 						}
+						Congrats();
 					});
 				}
 
 				const markers = document.querySelectorAll("#main-scene > a-marker");
 
 				for (const marker of markers) {
-					attachSoundsToMarker(marker);
+					attachSoundsToMarker(marker, parseInt(marker.getAttribute("value")));
 				}
+
+				Congrats = () => {
+					if (viewedMarkers) return;
+					for (const visto of marcadores) {
+						if (!visto) return;
+					}
+					viewedMarkers = true;
+					return setTimeout(() => alert("felicitaciones has ganado nuestro juego"), 1000);
+				};
 			})();
 		</script>
     </body>
